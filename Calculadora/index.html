@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,74 +8,93 @@
     <link rel="stylesheet" href="./index.css">
     <title>Calculadora</title>
 </head>
+
 <body>
-    <div>
-        <h1>Calculadora</h1>
-        <p>Suporta + - x / ( ) </p>
-    </div>
-    
+    <div class="bodyPage">
+        <div>
+            <div>
+                <h1>Calculadora</h1>
+                <p>Suporta + - x / ( ) </p>
+            </div>
+            <div class="history">
+                <button onclick="history()">Historico</button>
+            </div>
+            <div class="full">
+                <div class="top">
+                    <input type="text" class="res" disabled id="deubom">
+                </div>
+                <div class="body">
+                    <div class="topbody">
 
-    <div class="full">
-        <div class="top">
-            <input type="text" disabled id="deubom">
+                    </div>
+                    <div class="midbody">
+                        <div class="row">
+                            <input type="button" class="button" value="Apagar" onclick="set('f')">
+                            <input type="button" class="button" value="(" onclick="set('m')">
+                            <input type="button" class="button" value=")" onclick="set('n')">
+                            <input type="button" class="button" value="/" onclick="set('/')">
+                        </div>
+                        <div class="row">
+                            <input type="button" class="button" value="7" onclick="set('7')">
+                            <input type="button" class="button" value="8" onclick="set('8')">
+                            <input type="button" class="button" value="9" onclick="set('9')">
+                            <input type="button" class="button" value="X" onclick="set('*')">
+                        </div>
+
+                        <div class="row">
+                            <input type="button" class="button" value="4" onclick="set('4')">
+                            <input type="button" class="button" value="5" onclick="set('5')">
+                            <input type="button" class="button" value="6" onclick="set('6')">
+                            <input type="button" class="button" value="-" onclick="set('-')">
+                        </div>
+
+                        <div class="row">
+                            <input type="button" class="button" value="1" onclick="set('1')">
+                            <input type="button" class="button" value="2" onclick="set('2')">
+                            <input type="button" class="button" value="3" onclick="set('3')">
+                            <input type="button" class="button" value="+" onclick="set('+')">
+                        </div>
+
+                        <div class="row">
+                            <input type="button" class="button" value="0" onclick="set('0')">
+                            <input type="button" class="button" value="," onclick="set('.')">
+                            <input type="button" class="button" value="%" onclick="set('%')">
+                            <input type="button" class="button" value="=" onclick="set('=')">
+                        </div>
+                    </div>
+                    <div class="botbody">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="body">
-            <div class="topbody">
+        <div class="historico">
 
-            </div>
-            <div class="midbody">
-                <div class="row">
-                    <input type="button" class="button" value="Apagar" onclick="set('f')">
-                    <input type="button" class="button" value="(" onclick="set('m')">
-                    <input type="button" class="button" value=")" onclick="set('n')">
-                    <input type="button" class="button" value="/" onclick="set('/')">
-                </div>
-                <div class="row">
-                    <input type="button" class="button" value="7" onclick="set('7')">
-                    <input type="button" class="button" value="8" onclick="set('8')">
-                    <input type="button" class="button" value="9" onclick="set('9')">
-                    <input type="button" class="button" value="X" onclick="set('*')">
-                </div>
-                
-                <div class="row">
-                    <input type="button" class="button" value="4" onclick="set('4')">
-                    <input type="button" class="button" value="5" onclick="set('5')">
-                    <input type="button" class="button" value="6" onclick="set('6')">
-                    <input type="button" class="button" value="-" onclick="set('-')">
-                </div>
-                
-                <div class="row">
-                    <input type="button" class="button" value="1" onclick="set('1')">
-                    <input type="button" class="button" value="2" onclick="set('2')">
-                    <input type="button" class="button" value="3" onclick="set('3')">
-                    <input type="button" class="button" value="+" onclick="set('+')">
-                </div>
-                
-                <div class="row">
-                    <input type="button" class="button" value="0" onclick="set('0')">
-                    <input type="button" class="button" value="," onclick="set('.')">
-                    <input type="button" class="button" value="%" onclick="set('%')">
-                    <input type="button" class="button" value="=" onclick="set('=')">
-                </div>
-            </div>
-            <div class="botbody">
-
-            </div>
         </div>
     </div>
     <script>
         //VARS
-        let cal = ''; 
+        const htmlHitorico = document.querySelector(".historico");
+        let cal = '';
+        let historico = [];
+        //ex: da pra fazer ^ elevar os numeros so programar :)
+        //define os numeros e os sinais de operações
+        const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+        const sinal = ["-", "+", "*", "/", "^", "$", "(", ")"];
 
         //função que fica atualizando o valor do visor
-        const set = (e)=>{
+
+        const set = (e) => {
+            //vars 
+            let array = [];
+            let number = ""
+
             //faz o parênteses existir
             if (e == 'm') {
                 e = '('
             }
             if (e == 'n') {
                 e = ')'
-            } 
+            }
             //limpa o visor se clicar em apagar
             if (e == 'f') {
                 cal = ''
@@ -82,49 +102,63 @@
             }
             //chama o calculo se clicar no =
             if (e == '=') {
-                Calcular(cal)
-                return
-            }
-            //atualiza o valor do visor conforme o botão apertado
-            cal = cal + e
-            document.getElementById('deubom').value = cal   
-        }
-        //função calcular pega o valor do visor como paramentro 
-        const Calcular =(f) => {
-            //vars
-            let number = ""
-            let array = [];
-            let e = []
-            let i;
-            //define os numeros e os sinais de operações
-            //ex: da pra fazer ^ elevar os numeros so programar :)
-            const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-            const sinal = ["-", "+", "*", "/", "^", "$", "(", ")"];
-            //separa o valor  de cada termo do valor do visor em um termo do array
-            let arraySplit = f.split('')
-            //transforma o array separado em um array de numero divididos por sinais 
-            for (let index = 0; index < arraySplit.length; index++) {
-                if (num.includes(arraySplit[index])) {
-                    number = number + arraySplit[index]
-                } else if (sinal.includes(arraySplit[index])) {
-                    if (number != '') {
-                        array.push(parseFloat(number));
-                        number = '';
+                //separa o valor  de cada termo do valor do visor em um termo do array
+                let arraySplit = cal.split('')
+                //transforma o array separado em um array de numero divididos por sinais 
+                for (let index = 0; index < arraySplit.length; index++) {
+                    if (num.includes(arraySplit[index])) {
+                        number = number + arraySplit[index]
+                    } else if (sinal.includes(arraySplit[index])) {
+                        if (number != '') {
+                            array.push(parseFloat(number));
+                            number = '';
+                        }
+                        array.push(arraySplit[index]);
                     }
-                    array.push(arraySplit[index]);
                 }
-            }
-            //pega o ultimo numero que ta perdido
-            if (number != '') {
-                array.push(parseFloat(number));
-            }
-            //aqui ele apagar os 2 numeros mais o sinal da conta e adiciona a resposta no lugar
-            const posCalculo = (index, res ,e) => {
-                e.splice(index -1, 3)
-                e.splice(index - 1, 0, res)
-                return(e)
+                //pega o ultimo numero que ta perdido
+                if (number != '') {
+                    array.push(parseFloat(number));
+                }
+                res = Calcular(array)
+                historico.push({ "ope": cal, "res": res });
+                cal = res
+                console.log(cal);
+                e = null
             }
 
+            //atualiza o valor do visor conforme o botão apertado
+            cal = cal + e
+            document.getElementById('deubom').value = cal
+        }
+        //Historico
+        const history = () => {
+            htmlHitorico.innerHTML = ''
+            //objetoArray => historico[index] é o objeto do index
+            //indexArray => historico[index] é o index do map que ta sendo feito
+            // fullArray => historico é p arra completo
+            historico.map((objetoArray, indexArray, fullArray) => {
+                var htmlString = `
+                    <div class = "hist">
+                        <p class = "text"> Operação: ${objetoArray.ope}</p>
+                        <p class = "text"> Resultado: ${objetoArray.res}</p>
+                    </div>
+                `;
+                htmlHitorico.insertAdjacentHTML('beforeend', htmlString);
+            })
+        }
+
+        //função calcular pega o valor do visor como paramentro 
+        const Calcular = (array) => {
+            //vars
+            let e = []
+            let i;
+            //aqui ele apagar os 2 numeros mais o sinal da conta e adiciona a resposta no lugar
+            const posCalculo = (index, res, e) => {
+                e.splice(index - 1, 3)
+                e.splice(index - 1, 0, res)
+                return (e)
+            }
             //aqui a magica acontece onde o calculo é feito com base na ordem de procedencia
             function calcula(e) {
                 //primerio corre o array procurando por / * para fazelas
@@ -132,13 +166,13 @@
                     //se achar sinal de divisao faz a conta e envia pro posCalculo limpar o array e adicionar a resposta no array
                     if (e[i] == "/") {
                         let res = e[i - 1] / e[i + 1]
-                        posCalculo(i, res,e)
+                        posCalculo(i, res, e)
                         i--
                     }
                     //o mesmo para multiplicação
                     if (e[i] == "*") {
                         let res = e[i - 1] * e[i + 1]
-                        posCalculo(i, res,e)
+                        posCalculo(i, res, e)
                         i--
                     }
                 }
@@ -147,40 +181,41 @@
                     // faz a subtração
                     if (e[i] == "-") {
                         let res = e[i - 1] - e[i + 1]
-                        posCalculo(i, res,e)
+                        posCalculo(i, res, e)
                         i--
                     }
                     //faz a soma
                     if (e[i] == "+") {
                         let res = e[i - 1] + e[i + 1]
-                        posCalculo(i, res , e)
+                        posCalculo(i, res, e)
                         i--
                     }
                 }
                 //retorna o valor
-                return(e)
+                return (e)
                 //obs: é possível adicionar mais operações como raiz quadrada , potencia , entre outros des de que siga a orderm de procedencia correta
             }
             //agora que o codigo começa a ser executado aqui ele verifica se não existe parenteses no codigo se existir envia para o calcula() apenas a parte de dentro dos parenteses que é calculada e retona no array principal depois que o array dos parenteses é apagado do array principal
-            for (let index = array.length +1; index >= 0; index--) {
+            for (let index = array.length + 1; index >= 0; index--) {
                 if (array[index] == '(') {
                     let aIndex = index;
                     for (let index = aIndex; index < array.length; index++) {
                         if (array[index] == ')') {
-                            let arraySlice = array.slice(aIndex+1, index)
+                            let arraySlice = array.slice(aIndex + 1, index)
                             calcula(arraySlice)
-                            array.splice(aIndex,index - aIndex + 1)
-                            array.splice(aIndex,0,arraySlice[0])
+                            array.splice(aIndex, index - aIndex + 1)
+                            array.splice(aIndex, 0, arraySlice[0])
                         }
                     }
                 }
             }
             // depois que todos os parenteses são calculado então envia o array principal para ser calculado
             calcula(array)
-            //pega a resposta e exibe ela            
-            document.getElementById('deubom').value = array[0]
+            //pega a resposta e exibe ela 
+            return (array[0]);
+
             //atuliza o valor de cal para o resposta
-            cal=array[0]
+            cal = array[0]
 
             //INUTILIZADO COM O TEMPO
             // for (let index = 0; index < arraySplit.length; index++) {
