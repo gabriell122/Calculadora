@@ -29,37 +29,37 @@
                     </div>
                     <div class="midbody">
                         <div class="row">
-                            <input type="button" class="button" value="Apagar" onclick="set('f')">
-                            <input type="button" class="button" value="(" onclick="set('m')">
-                            <input type="button" class="button" value=")" onclick="set('n')">
-                            <input type="button" class="button" value="/" onclick="set('/')">
+                            <input type="button" class="button" value="Apagar" onclick="PresButton('f')">
+                            <input type="button" class="button" value="(" onclick="PresButton('m')">
+                            <input type="button" class="button" value=")" onclick="PresButton('n')">
+                            <input type="button" class="button" value="/" onclick="PresButton('/')">
                         </div>
                         <div class="row">
-                            <input type="button" class="button" value="7" onclick="set('7')">
-                            <input type="button" class="button" value="8" onclick="set('8')">
-                            <input type="button" class="button" value="9" onclick="set('9')">
-                            <input type="button" class="button" value="X" onclick="set('*')">
-                        </div>
-
-                        <div class="row">
-                            <input type="button" class="button" value="4" onclick="set('4')">
-                            <input type="button" class="button" value="5" onclick="set('5')">
-                            <input type="button" class="button" value="6" onclick="set('6')">
-                            <input type="button" class="button" value="-" onclick="set('-')">
+                            <input type="button" class="button" value="7" onclick="PresButton('7')">
+                            <input type="button" class="button" value="8" onclick="PresButton('8')">
+                            <input type="button" class="button" value="9" onclick="PresButton('9')">
+                            <input type="button" class="button" value="X" onclick="PresButton('*')">
                         </div>
 
                         <div class="row">
-                            <input type="button" class="button" value="1" onclick="set('1')">
-                            <input type="button" class="button" value="2" onclick="set('2')">
-                            <input type="button" class="button" value="3" onclick="set('3')">
-                            <input type="button" class="button" value="+" onclick="set('+')">
+                            <input type="button" class="button" value="4" onclick="PresButton('4')">
+                            <input type="button" class="button" value="5" onclick="PresButton('5')">
+                            <input type="button" class="button" value="6" onclick="PresButton('6')">
+                            <input type="button" class="button" value="-" onclick="PresButton('-')">
                         </div>
 
                         <div class="row">
-                            <input type="button" class="button" value="0" onclick="set('0')">
-                            <input type="button" class="button" value="," onclick="set('.')">
-                            <input type="button" class="button" value="%" onclick="set('%')">
-                            <input type="button" class="button" value="=" onclick="set('=')">
+                            <input type="button" class="button" value="1" onclick="PresButton('1')">
+                            <input type="button" class="button" value="2" onclick="PresButton('2')">
+                            <input type="button" class="button" value="3" onclick="PresButton('3')">
+                            <input type="button" class="button" value="+" onclick="PresButton('+')">
+                        </div>
+
+                        <div class="row">
+                            <input type="button" class="button" value="0" onclick="PresButton('0')">
+                            <input type="button" class="button" value="," onclick="PresButton('.')">
+                            <input type="button" class="button" value="%" onclick="PresButton('%')">
+                            <input type="button" class="button" value="=" onclick="PresButton('=')">
                         </div>
                     </div>
                     <div class="botbody">
@@ -72,83 +72,183 @@
         </div>
     </div>
     <script>
-        //VARS
+        //Var global
+        let currentNumber = '';
+        let arrayCount = [];
+        let historic = [];
         const htmlHitorico = document.querySelector(".historico");
-        let cal = '';
-        let historico = [];
-        //ex: da pra fazer ^ elevar os numeros so programar :)
-        //define os numeros e os sinais de operações
-        const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-        const sinal = [
-            "-", "+", "*", "/", "^", "$", 
-            "m", // ( 
-            "n" , // )
-            "f"// apaga
-        ];
+        const PresButton = (presButton) => {
 
-        //função que fica atualizando o valor do visor
+            //defino os numero e sinais de operações
+            const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+            const sinal = ["-", "+", "*", "/", "^", "$", "m", "n", "f"];
 
-        const set = (e) => {
-            //vars 
-            let array = [];
-            let number = ""
-            if (num.includes(e)) {
-                //atualiza o valor do visor conforme o botão apertado
-                cal = cal+e
-            }
-            //faz o parênteses existir
-            if (sinal.includes(e)){
-                switch (e) {
-                    case  'm':
-                        e = '(';
+            //se for numero
+            if (num.includes(presButton)) {
+
+                // junto a string deles
+                currentNumber = currentNumber + presButton;
+                //exibe o calculo na tela
+                document.getElementById('deubom').value = arrayCount.join(' ') + ' ' + currentNumber;
+
+                //se for sinal
+            } else if (sinal.includes(presButton)) {
+
+                //verifico sinais  que não da para pasar valor direto        
+                switch (presButton) {
+                    case 'm':
+                        presButton = '(';
+                        break;
                     case 'n':
-                        e = ')';
+                        presButton = ')';
+                        break;
+                    // Apaga a memória resetando o arrayCount e o currentNumber
                     case 'f':
-                        e = '';
-                        cal = '';
+                        arrayCount = '';
+                        currentNumber = '';
+                        break;
                     default:
-                        array.push(cal)
-                        array.push(e)
-                        cal = ''  
-                    break;
+                        break;
+
                 }
-                //chama o calculo se clicar no =
-                if (e == '=') {
-                    //separa o valor  de cada termo do valor do visor em um termo do array
-                    let arraySplit = cal.split('')
-                    //transforma o array separado em um array de numero divididos por sinais 
-                    for (let index = 0; index < arraySplit.length; index++) {
-                        if (num.includes(arraySplit[index])) {
-                            number = number + arraySplit[index]
-                        } else if (sinal.includes(arraySplit[index])) {
-                            if (number != '') {
-                                array.push(parseFloat(number));
-                                number = '';
-                            }
-                            array.push(arraySplit[index]);
+
+                //acrecenta ao array o número  se ele existir
+                if (currentNumber) {
+                    arrayCount.push(parseFloat(currentNumber));
+                }
+
+                //adiciona o sinal 
+                arrayCount.push(presButton);
+
+                //reseta o currentNumber
+                currentNumber = '';
+
+                //exibe o calculo na tela
+                document.getElementById('deubom').value = arrayCount.join(' ');
+
+                //se for o sinal de =
+            } else if (presButton === "=") {
+
+                //verifica se não tem um numero perdido
+                if (currentNumber) {
+                    arrayCount.push(parseFloat(currentNumber));
+
+                    //reseta o currentNumber
+                    currentNumber = '';
+                }
+                //chama a função de calculo e passa como parametro arrayCount
+                const Res = Ordem([...arrayCount]);
+
+                //mostra a resposta
+                document.getElementById('deubom').value = Res;
+                
+                //historico 
+                historic.push({
+                    "ope": arrayCount,
+                    "res": Res
+                });
+
+                //reseta o valor do arrayCount e atribui o valor da resposta a ele
+                arrayCount = [];
+                arrayCount.push(Res);
+
+                //Erro
+            } else {
+                console.log('Erro:Entrada não tratada');
+            }
+        }
+
+        //Função que verifica os parênteses 
+        const Ordem = (arrayMap) => {
+
+            //Roda o arrayMap buscando por parênteses (pela ultima abertura)
+            for (let index = arrayMap.length + 1; index >= 0; index--) {
+
+                //se achar
+                if (arrayMap[index] == '(') {
+                    let aIndex = index;
+
+                    //busca pelo primeiro fechamento
+                    for (let index = aIndex; index < arrayMap.length; index++) {
+
+                        //se achar o fechamento
+                        if (arrayMap[index] == ')') {
+
+                            //corta o arrayMap gerando um novo arraySlice que é o recorte interno do conteudo do parênteses
+                            let arraySlice = arrayMap.slice(aIndex + 1, index);
+
+                            //calcula o valor do arraySlice
+                            const Res = Calcular(arraySlice);
+                            //ranca a parte do parênteses que foi calculado 
+                            arrayMap.splice(aIndex, index - aIndex + 1);
+                            //adiciona o valor Resultado
+                            arrayMap.splice(aIndex, 0, Res[0]);
+                        } else {
+                            console.log('Erro: fechamento de parênteses');
                         }
                     }
-                    //pega o ultimo numero que ta perdido
-                    if (number != '') {
-                        array.push(parseFloat(number));
-                    }
-                    res = Calcular(array)
-                    historico.push({ "ope": cal, "res": res });
-                    cal = res
-                    e = null
                 }
-                
             }
-            document.getElementById('deubom').value = array.join(' ')
-            console.log(array);
+
+            // depois que todos os parenteses são calculado então envia o array principal para ser calculado
+            const Resultado = Calcular(arrayMap);
+            //pega a resposta retorna ela
+            return (Resultado[0]);
+            //atuliza o valor de cal para o resposta
+            cal = array[0]
         }
-        //Historico
-        const history = () => {
-            htmlHitorico.innerHTML = ''
+
+        //Função que realmente calcula
+        function Calcular(e) {
+            //primerio corre o array procurando por / * para fazelas
+            for (let i = 0; i < e.length; i++) {
+                //se achar sinal de divisao faz a conta e envia pro posCalculo limpar o array e adicionar a resposta no array
+                if (e[i] == "/") {
+                    let res = e[i - 1] / e[i + 1];
+                    posCalculo(i, res, e);
+                    i--;
+                }
+                //o mesmo para multiplicação
+                if (e[i] == "*") {
+                    let res = e[i - 1] * e[i + 1];
+                    posCalculo(i, res, e);
+                    i--;
+                }
+            }
+            //acabando a multiplicação e divisão começa a soma e subtração 
+            for (let i = 0; i < e.length; i++) {
+                // faz a subtração
+                if (e[i] == "-") {
+                    let res = e[i - 1] - e[i + 1];
+                    posCalculo(i, res, e);
+                    i--
+                }
+                //faz a soma
+                if (e[i] == "+") {
+                    let res = e[i - 1] + e[i + 1];
+                    posCalculo(i, res, e);
+                    i--;
+                }
+            }
+            //retorna o valor
+            return (e);
+            //obs: é possível adicionar mais operações como raiz quadrada , potencia , entre outros des de que siga a orderm de procedencia correta
+        }
+
+        const posCalculo = (index, res, e) => {
+            e.splice(index - 1, 3);
+            e.splice(index - 1, 0, res);
+            return (e);
+        }
+
+        //historico 
+         //Historico
+         const history = () => {
+            htmlHitorico.innerHTML = '';
             //objetoArray => historico[index] é o objeto do index
             //indexArray => historico[index] é o index do map que ta sendo feito
             // fullArray => historico é p arra completo
-            historico.map((objetoArray, indexArray, fullArray) => {
+            historic.map((objetoArray, indexArray, fullArray) => {
                 var htmlString = `
                     <div class = "hist">
                         <p class = "text"> Operação: ${objetoArray.ope}</p>
@@ -159,97 +259,6 @@
             })
         }
 
-        //função calcular pega o valor do visor como paramentro 
-        /*
-        const Calcular = (array) => {
-            //vars
-            let e = []
-            let i;
-            //aqui ele apagar os 2 numeros mais o sinal da conta e adiciona a resposta no lugar
-            const posCalculo = (index, res, e) => {
-                e.splice(index - 1, 3)
-                e.splice(index - 1, 0, res)
-                return (e)
-            }
-            //aqui a magica acontece onde o calculo é feito com base na ordem de procedencia
-            function calcula(e) {
-                //primerio corre o array procurando por / * para fazelas
-                for (let i = 0; i < e.length; i++) {
-                    //se achar sinal de divisao faz a conta e envia pro posCalculo limpar o array e adicionar a resposta no array
-                    if (e[i] == "/") {
-                        let res = e[i - 1] / e[i + 1]
-                        posCalculo(i, res, e)
-                        i--
-                    }
-                    //o mesmo para multiplicação
-                    if (e[i] == "*") {
-                        let res = e[i - 1] * e[i + 1]
-                        posCalculo(i, res, e)
-                        i--
-                    }
-                }
-                //acabando a multiplicação e divisão começa a soma e subtração 
-                for (let i = 0; i < e.length; i++) {
-                    // faz a subtração
-                    if (e[i] == "-") {
-                        let res = e[i - 1] - e[i + 1]
-                        posCalculo(i, res, e)
-                        i--
-                    }
-                    //faz a soma
-                    if (e[i] == "+") {
-                        let res = e[i - 1] + e[i + 1]
-                        posCalculo(i, res, e)
-                        i--
-                    }
-                }
-                //retorna o valor
-                return (e)
-                //obs: é possível adicionar mais operações como raiz quadrada , potencia , entre outros des de que siga a orderm de procedencia correta
-            }
-            //agora que o codigo começa a ser executado aqui ele verifica se não existe parenteses no codigo se existir envia para o calcula() apenas a parte de dentro dos parenteses que é calculada e retona no array principal depois que o array dos parenteses é apagado do array principal
-            for (let index = array.length + 1; index >= 0; index--) {
-                if (array[index] == '(') {
-                    let aIndex = index;
-                    for (let index = aIndex; index < array.length; index++) {
-                        if (array[index] == ')') {
-                            let arraySlice = array.slice(aIndex + 1, index)
-                            calcula(arraySlice)
-                            array.splice(aIndex, index - aIndex + 1)
-                            array.splice(aIndex, 0, arraySlice[0])
-                        }
-                    }
-                }
-            }
-            // depois que todos os parenteses são calculado então envia o array principal para ser calculado
-            calcula(array)
-            //pega a resposta e exibe ela 
-            return (array[0]);
-
-            //atuliza o valor de cal para o resposta
-            cal = array[0]
-
-            //INUTILIZADO COM O TEMPO
-            // for (let index = 0; index < arraySplit.length; index++) {
-            //     //troca , por . para poder fazer os calculos
-            //     if (arraySplit[index] == ",") {
-            //         arraySplit[index] = "."
-            //         index++
-            //     }
-            //     //apaga os espaços em pranco
-            //     if (arraySplit[index] == " ") {
-            //         arraySplit.splice(index, 1)
-            //         index--
-            //     }
-            //     //troca X por * para poder fazer os calculos
-            //     if (arraySplit[index] == "x") {
-            //         arraySplit[index] = "*"
-            //         index++
-            //     }
-            // }
-
-        }
-        */
     </script>
 </body>
 
