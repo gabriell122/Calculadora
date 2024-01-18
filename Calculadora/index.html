@@ -81,7 +81,7 @@
 
             //defino os numero e sinais de operações
             const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-            const sinal = ["-", "+", "*", "/", "^", "$", "m", "n", "f"];
+            const sinal = ["-", "+", "*", "/", "^", "$", "m", "n", "f" , "%"];
 
             //se for numero
             if (num.includes(presButton)) {
@@ -200,6 +200,13 @@
 
         //Função que realmente calcula
         function Calcular(e) {
+            //verifica se não tem %
+            for (let i = 0; i < e.length; i++) {
+                if (e[i] == "%") {
+                    e[i-1] = e[i-1]/100;
+                    e.splice(i, 1);
+                }
+            }            
             //primerio corre o array procurando por / * para fazelas
             for (let i = 0; i < e.length; i++) {
                 //se achar sinal de divisao faz a conta e envia pro posCalculo limpar o array e adicionar a resposta no array
