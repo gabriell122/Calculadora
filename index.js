@@ -76,7 +76,7 @@
 
                 //reseta o valor do arrayCount e atribui o valor da resposta a ele
                 arrayCount = [];
-                arrayCount.push(Res);
+                currentNumber = Res;
 
                 //Erro
             } else {
