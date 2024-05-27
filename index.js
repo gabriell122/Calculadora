@@ -184,7 +184,7 @@
             historic.map((objetoArray, indexArray, fullArray) => {
                 var htmlString = `
                     <div class = "hist">
-                        <p class = "text"> Operação: ${objetoArray.ope}</p>
+                        <p class = "text"> Operação: ${objetoArray.ope.join("")}</p>
                         <p class = "text"> Resultado: ${objetoArray.res}</p>
                     </div>
                 `;
