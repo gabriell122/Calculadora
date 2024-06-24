@@ -10,66 +10,88 @@
 </head>
 
 <body>
-    <div class="bodyPage">
-        <div>
-            <div>
-                <h1>Calculadora</h1>
-                <p>Suporta + - x / ( ) </p>
+    <div class="calculadora">
+        <div class="view">
+            <div class="text" id="res">
+
             </div>
-            <div class="history">
-                <button onclick="history()">Historico</button>
-            </div>
-            <div class="full">
-                <div class="top">
-                    <input type="text" class="res" disabled id="deubom">
+        </div>
+        <div class="body">
+            <div class="line">
+                <div class="botton" onclick="PresButton('f')">
+                    AC
                 </div>
-                <div class="body">
-                    <div class="topbody">
-
-                    </div>
-                    <div class="midbody">
-                        <div class="row">
-                            <input type="button" class="button" value="Apagar" onclick="PresButton('f')">
-                            <input type="button" class="button" value="(" onclick="PresButton('m')">
-                            <input type="button" class="button" value=")" onclick="PresButton('n')">
-                            <input type="button" class="button" value="/" onclick="PresButton('/')">
-                        </div>
-                        <div class="row">
-                            <input type="button" class="button" value="7" onclick="PresButton('7')">
-                            <input type="button" class="button" value="8" onclick="PresButton('8')">
-                            <input type="button" class="button" value="9" onclick="PresButton('9')">
-                            <input type="button" class="button" value="X" onclick="PresButton('*')">
-                        </div>
-
-                        <div class="row">
-                            <input type="button" class="button" value="4" onclick="PresButton('4')">
-                            <input type="button" class="button" value="5" onclick="PresButton('5')">
-                            <input type="button" class="button" value="6" onclick="PresButton('6')">
-                            <input type="button" class="button" value="-" onclick="PresButton('-')">
-                        </div>
-
-                        <div class="row">
-                            <input type="button" class="button" value="1" onclick="PresButton('1')">
-                            <input type="button" class="button" value="2" onclick="PresButton('2')">
-                            <input type="button" class="button" value="3" onclick="PresButton('3')">
-                            <input type="button" class="button" value="+" onclick="PresButton('+')">
-                        </div>
-
-                        <div class="row">
-                            <input type="button" class="button" value="0" onclick="PresButton('0')">
-                            <input type="button" class="button" value="," onclick="PresButton('.')">
-                            <input type="button" class="button" value="%" onclick="PresButton('%')">
-                            <input type="button" class="button" value="=" onclick="PresButton('=')">
-                        </div>
-                    </div>
-                    <div class="botbody">
-                    </div>
+                <div class="botton" onclick="PresButton('m')">
+                    (
+                </div>
+                <div class="botton" onclick="PresButton('n')">
+                    )
+                </div>
+                <div class="botton end" onclick="PresButton('/')">
+                    /
+                </div>
+            </div>
+            <div class="line">
+                <div class="botton" onclick="PresButton('7')">
+                    7
+                </div>
+                <div class="botton" onclick="PresButton('8')">
+                    8
+                </div>
+                <div class="botton" onclick="PresButton('9')">
+                    9
+                </div>
+                <div class="botton end" onclick="PresButton('*')">
+                    *
+                </div>
+            </div>
+            <div class="line">
+                <div class="botton" onclick="PresButton('4')">
+                    4
+                </div>
+                <div class="botton" onclick="PresButton('5')">
+                    5
+                </div>
+                <div class="botton" onclick="PresButton('6')">
+                    6
+                </div>
+                <div class="botton end" onclick="PresButton('-')">
+                    -
+                </div>
+            </div>
+            <div class="line">
+                <div class="botton" onclick="PresButton('1')">
+                    1
+                </div>
+                <div class="botton" onclick="PresButton('2')">
+                    2
+                </div>
+                <div class="botton" onclick="PresButton('3')">
+                    3
+                </div>
+                <div class="botton end" onclick="PresButton('+')">
+                    +
+                </div>
+            </div>
+            <div class="line end">
+                <div class="botton" onclick="PresButton(',')">
+                    ,
+                </div>
+                <div class="botton" onclick="PresButton('0')">
+                    0
+                </div>
+                <div class="botton" onclick="PresButton('%')">
+                    %
+                </div>
+                <div class="botton end" onclick="PresButton('=')">
+                    =
                 </div>
             </div>
         </div>
-        <div class="historico">
+    </div>
+    <div class="historico" id="history">
 
-        </div>
+    </div>
     </div>
     <script src="./index.js">
     </script>
