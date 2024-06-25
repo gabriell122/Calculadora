@@ -2,10 +2,16 @@
 
 
 //Define o visor
-const visor = document.getElementById('visor')
+const visor = document.getElementById('visor');
+
+//Define o historico
+const htmlHitorico = document.getElementById("historico");
 
 //Define uma variável para armanezar o Número Corrente
 let numeroCorrente = "";
+
+//Cria um Array para amazenar o historico
+var historico = [];
 
 //Cria um Array para gardar os Números e Sinais da Conta já separados
 let contaArray = [];
@@ -128,7 +134,7 @@ const Igual = () => {
     if (typeof Resposta === 'number') {
         
         //Gera o Array do Histórico 
-        historic.push({
+        historico.push({
             "ope": contaArray,
             "res": Resposta
         });
@@ -212,198 +218,53 @@ const Parenteses = () => {
 
     //Depois que todos os parenteses são calculado então envia o array principal para ser calculado
     const Resultado = Calcular(semParenteses);
+
     //pega a resposta retorna ela
     return (Resultado[0]);
-}
-
-
-
-const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-
-//Var global
-let currentNumber = '';
-let arrayCount = [];
-let historic = [];
-const htmlHitorico = document.getElementById("history");
-let sinalPress = "";
-const PresButton = (presButton) => {
-
-
-    //se for numero
-    if (num.includes(presButton)) {
-
-        // junto a string deles
-        currentNumber = currentNumber + presButton;
-        //exibe o calculo na tela
-        document.getElementById('visor').innerHTML = arrayCount.join(' ') + ' ' + sinalPress + ' ' + currentNumber;
-        if (sinalPress) {
-            arrayCount.push(sinalPress);
-            sinalPress = ""
-        }
-
-        //se for sinal
-    } else if (sinal.includes(presButton)) {
-
-
-
-        //acrecenta ao array o número  se ele existir
-        if (currentNumber) {
-            arrayCount.push(parseFloat(currentNumber));
-        }
-
-        sinalPress = presButton
-
-        //verifico sinais  que não da para pasar valor direto        
-        switch (presButton) {
-            case 'm':
-                presButton = '(';
-                break;
-            case 'n':
-                presButton = ')';
-                break;
-            // Apaga a memória resetando o arrayCount e o currentNumber
-            case 'f':
-                arrayCount = [];
-                currentNumber = '';
-                sinalPress = "";
-                break;
-            default:
-                break;
-
-        }
-
-        //adiciona o sinal 
-        //arrayCount.push(presButton);
-
-        //reseta o currentNumber
-        currentNumber = '';
-
-        //exibe o calculo na tela
-        document.getElementById('visor').innerHTML = arrayCount.join(' ') + " " + sinalPress;
-
-        //se for o sinal de =
-    } else if (presButton === "=") {
-
-        //verifica se não tem um numero perdido
-        if (currentNumber) {
-            arrayCount.push(parseFloat(currentNumber));
-
-            //reseta o currentNumber
-            currentNumber = '';
-        }
-        //chama a função de calculo e passa como parametro arrayCount
-        const Res = Ordem([...arrayCount]);
-
-
-        if (typeof Res === 'number') {
-            //mostra a resposta
-            document.getElementById('visor').innerHTML = Res;
-            //historico 
-            historic.push({
-                "ope": arrayCount,
-                "res": Res
-            });
-
-            //reseta o valor do arrayCount e atribui o valor da resposta a ele
-            arrayCount = [];
-            currentNumber = Res;
-
-            //historico
-            historicoView();
-
-        } else {
-            document.getElementById('visor').innerHTML = "Error";
-        }
-
-
-
-        //Erro
-    } else {
-        console.log('Erro:Entrada não tratada');
-    }
-}
-
-//Função que verifica os parênteses 
-const Ordem = (arrayMap) => {
-    console.log(arrayMap);
-    //Roda o arrayMap buscando por parênteses (pela ultima abertura)
-    for (let index = arrayMap.length + 1; index >= 0; index--) {
-
-        //se achar
-        if (arrayMap[index] == '(') {
-            let aIndex = index;
-
-            //busca pelo primeiro fechamento
-            for (let index = aIndex; index < arrayMap.length; index++) {
-
-                //se achar o fechamento
-                if (arrayMap[index] == ')') {
-
-                    //corta o arrayMap gerando um novo arraySlice que é o recorte interno do conteudo do parênteses
-                    let arraySlice = arrayMap.slice(aIndex + 1, index);
-
-                    //calcula o valor do arraySlice
-                    const Res = Calcular(arraySlice);
-                    //ranca a parte do parênteses que foi calculado 
-                    arrayMap.splice(aIndex, index - aIndex + 1);
-                    //adiciona o valor Resultado
-                    arrayMap.splice(aIndex, 0, Res[0]);
-                } else {
-                    console.log('Erro: fechamento de parênteses');
-                }
-            }
-        }
-    }
-
-    // depois que todos os parenteses são calculado então envia o array principal para ser calculado
-    const Resultado = Calcular(arrayMap);
-    //pega a resposta retorna ela
-    return (Resultado[0]);
-    //atuliza o valor de cal para o resposta
-    cal = array[0]
 }
 
 //Função que realmente calcula
-function Calcular(e) {
+function Calcular(array) {
     //verifica se não tem %
-    for (let i = 0; i < e.length; i++) {
-        if (e[i] == "%") {
-            e[i - 1] = e[i - 1] / 100;
-            e.splice(i, 1);
+    for (let indice = 0; indice < array.length; indice++) {
+        if (array[indice] == "%") {
+            array[indice - 1] = array[indice - 1] / 100;
+            array.splice(indice, 1);
         }
     }
     //primerio corre o array procurando por / * para fazelas
-    for (let i = 0; i < e.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         //se achar sinal de divisao faz a conta e envia pro posCalculo limpar o array e adicionar a resposta no array
-        if (e[i] == "/") {
-            let res = e[i - 1] / e[i + 1];
-            posCalculo(i, res, e);
+        if (array[i] == "/") {
+            let res = array[i - 1] / array[i + 1];
+            posCalculo(i, res, array);
             i--;
         }
         //o mesmo para multiplicação
-        if (e[i] == "*") {
-            let res = e[i - 1] * e[i + 1];
-            posCalculo(i, res, e);
+        if (array[i] == "*") {
+            let res = array[i - 1] * array[i + 1];
+            posCalculo(i, res, array);
             i--;
         }
     }
     //acabando a multiplicação e divisão começa a soma e subtração 
-    for (let i = 0; i < e.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         // faz a subtração
-        if (e[i] == "-") {
-            let res = e[i - 1] - e[i + 1];
-            posCalculo(i, res, e);
+        if (array[i] == "-") {
+            let res = array[i - 1] - array[i + 1];
+            posCalculo(i, res, array);
             i--
         }
         //faz a soma
-        if (e[i] == "+") {
-            let res = e[i - 1] + e[i + 1];
-            posCalculo(i, res, e);
+        if (array[i] == "+") {
+            let res = array[i - 1] + array[i + 1];
+            posCalculo(i, res, array);
             i--;
         }
     }
+
     //retorna o valor
-    return (e);
+    return (array);
     //obs: é possível adicionar mais operações como raiz quadrada , potencia , entre outros des de que siga a orderm de procedencia correta
 }
 
@@ -421,7 +282,7 @@ const historicoView = () => {
     //objetoArray => historico[index] é o objeto do index
     //indexArray => historico[index] é o index do map que ta sendo feito
     // fullArray => historico é p arra completo
-    historic.map((objetoArray, indexArray, fullArray) => {
+    historico.map((objetoArray, indexArray, fullArray) => {
         var htmlString = `
             <div class = "hist">
                 <div class = "textRes"> ${objetoArray.ope.join("")} = ${objetoArray.res}</div>
