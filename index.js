@@ -99,84 +99,126 @@ const Sinal = (botao) => {
     visor.innerHTML = contaArray.join(' ') + " " + sinalCorrente;
 }
 
-const Igual = ()=>{
+const Igual = () => {
 
     //Verifica se não tem um Número perdido
     if (numeroCorrente) {
 
         //Adiciona ele no Array
         contaArray.push(parseFloat(numeroCorrente));
-        
+
         //reseta o numeroCorrente
         numeroCorrente = '';
     }
 
     //Verifica se não tem um Sinal perdido
-    if(sinalCorrente){
+    if (sinalCorrente) {
 
         //Adiciona ele no Array
         contaArray.push(sinalCorrente);
-        
-        //reseta o sinalCorrente
+
+        //Reseta o sinalCorrente
         sinalCorrente = "";
     }
 
-    const Resposta = Calculo();
+    //Chama a função de calculo entre parenteses que retorna a resposta
+    const Resposta = Parenteses();
 
-}
-
-//Faz o calculo
-const Calculo = ()=>{
-    contaArray.map(
+    //Verifica se a resposta é um Número
+    if (typeof Resposta === 'number') {
         
-    )
+        //Gera o Array do Histórico 
+        historic.push({
+            "ope": contaArray,
+            "res": Resposta
+        });
+
+        //Reseta o valor do contaArray
+        contaArray = [];
+
+        //Garda a resposta no Número Corrente
+        numeroCorrente = Resposta;
+
+        //Mostra a resposta
+        document.getElementById('visor').innerHTML = numeroCorrente;
+
+        //historico
+        historicoView();
+
+    } else {
+        document.getElementById('visor').innerHTML = "Error";
+    }
 
 }
 
+//Faz o calculo entre Parenteses
+const Parenteses = () => {
 
-//Função que verifica os parênteses 
-const Ordem2 = (arrayMap) => {
+    //Copia o Array em outro para modificar ele
+    let semParenteses = [...contaArray];
 
-    //Roda o arrayMap buscando por parênteses (pela ultima abertura)
-    for (let index = arrayMap.length + 1; index >= 0; index--) {
+    //Faz o map desse Array
+    semParenteses.map(
+        (item, indice, array) => {
 
-        //se achar
-        if (arrayMap[index] == '(') {
-            let aIndex = index;
+            //Busca o primeiro fechamento de parenteses no Array
+            if (item == ")") {
 
-            //busca pelo primeiro fechamento
-            for (let index = aIndex; index < arrayMap.length; index++) {
+                //Guarda o indice dele 
+                const fechamentoIndice = indice;
 
-                //se achar o fechamento
-                if (arrayMap[index] == ')') {
+                //Define uma variável para guardar a abertura
+                let aberturaIndice;
 
-                    //corta o arrayMap gerando um novo arraySlice que é o recorte interno do conteudo do parênteses
-                    let arraySlice = arrayMap.slice(aIndex + 1, index);
+                //Busca o ultima abertura de parenteses antes do primeiro fechamento de parenteses do Array
+                contaArray.map(
+                    (item, indice) => {
 
-                    //calcula o valor do arraySlice
-                    const Res = Calcular(arraySlice);
-                    //ranca a parte do parênteses que foi calculado 
-                    arrayMap.splice(aIndex, index - aIndex + 1);
-                    //adiciona o valor Resultado
-                    arrayMap.splice(aIndex, 0, Res[0]);
+                        //Acha as aberturas de paresteses
+                        if (item == "(") {
+
+                            //Verifica se ela esta antes do primeiro fechamento do parrenses
+                            if (indice < fechamentoIndice) {
+
+                                //Garda o indice dele
+                                aberturaIndice = indice;
+                            }
+                        }
+                    }
+                )
+                
+                //Verifica se a quantidade de aberturas e fechamentos de parenteses batem
+                if (aberturaIndice && fechamentoIndice || aberturaIndice && fechamentoIndice) {
+
+                    //Garda os itens dentro dos parenteses em outro array
+                    let parentesesArray = array.slice(aberturaIndice + 1, fechamentoIndice);
+
+                    //Calcula o resultado dentro dos parenteses
+                    const resposta = Calcular(parentesesArray);
+
+                    //Ranca os parenteses e termos dentro dele
+                    array.splice(aberturaIndice, fechamentoIndice - aberturaIndice + 1);
+
+                    //Adiciona o resultado da conta no array principal
+                    array.splice(aberturaIndice, 0, resposta[0]);
+
+                    //Retorna mensagem de erro
                 } else {
-                    console.log('Erro: fechamento de parênteses');
+                    console.log('Erro de parênteses');
                 }
             }
         }
-    }
+    )
 
-    // depois que todos os parenteses são calculado então envia o array principal para ser calculado
-    const Resultado = Calcular(arrayMap);
+    //Depois que todos os parenteses são calculado então envia o array principal para ser calculado
+    const Resultado = Calcular(semParenteses);
     //pega a resposta retorna ela
     return (Resultado[0]);
-    //atuliza o valor de cal para o resposta
-    cal = array[0]
 }
 
 
 
-
+const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
 
 //Var global
 let currentNumber = '';
@@ -187,14 +229,13 @@ let sinalPress = "";
 const PresButton = (presButton) => {
 
 
-
     //se for numero
     if (num.includes(presButton)) {
 
         // junto a string deles
         currentNumber = currentNumber + presButton;
         //exibe o calculo na tela
-        document.getElementById('res').innerHTML = arrayCount.join(' ') + ' ' + sinalPress + ' ' + currentNumber;
+        document.getElementById('visor').innerHTML = arrayCount.join(' ') + ' ' + sinalPress + ' ' + currentNumber;
         if (sinalPress) {
             arrayCount.push(sinalPress);
             sinalPress = ""
@@ -238,7 +279,7 @@ const PresButton = (presButton) => {
         currentNumber = '';
 
         //exibe o calculo na tela
-        document.getElementById('res').innerHTML = arrayCount.join(' ') + " " + sinalPress;
+        document.getElementById('visor').innerHTML = arrayCount.join(' ') + " " + sinalPress;
 
         //se for o sinal de =
     } else if (presButton === "=") {
@@ -256,7 +297,7 @@ const PresButton = (presButton) => {
 
         if (typeof Res === 'number') {
             //mostra a resposta
-            document.getElementById('res').innerHTML = Res;
+            document.getElementById('visor').innerHTML = Res;
             //historico 
             historic.push({
                 "ope": arrayCount,
@@ -271,7 +312,7 @@ const PresButton = (presButton) => {
             historicoView();
 
         } else {
-            document.getElementById('res').innerHTML = "Error";
+            document.getElementById('visor').innerHTML = "Error";
         }
 
 
@@ -284,7 +325,7 @@ const PresButton = (presButton) => {
 
 //Função que verifica os parênteses 
 const Ordem = (arrayMap) => {
-
+    console.log(arrayMap);
     //Roda o arrayMap buscando por parênteses (pela ultima abertura)
     for (let index = arrayMap.length + 1; index >= 0; index--) {
 
