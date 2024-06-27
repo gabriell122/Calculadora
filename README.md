@@ -8,6 +8,8 @@ Esta é uma calculadora simples desenvolvida utilizando as tecnologias web HTML,
 **Suporte a Parênteses:** A capacidade de usar parênteses para controlar a ordem de execução das operações.
 **Facilmente Expansível:** O código foi desenvolvido com modularidade, permitindo a fácil adição de novas funcionalidades.
 ## Como Usar
+Link **https://gabriell122.github.io/Calculadora/**
+ou
 Abra o arquivo **index.html** em seu navegador web.
 Utilize os botões da calculadora para inserir números e realizar operações.
 Experimente a flexibilidade da calculadora ao usar parênteses para controlar a ordem de execução das operações.
