@@ -1,58 +1,76 @@
-.full{
-    
-    width: 400px;
-    height: 500px;
-    background-color: #151313;
+body{
     display: flex;
-    flex-direction: column;
+    background-color: black;
 }
-.top{
-    display: flex;
-    width: 400px;
+.calculadora {
+    width: 360px;
+    height: 560px;
+    box-sizing: border-box;
+    background-color: #292929;
+    padding: 5px;
+    margin-right: 20px;
+}
+
+.view {
+    position: relative;
+    width: 100%;
     height: 100px;
+    background-color: #606060;
 }
-.top input{
+
+.text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    box-sizing: border-box;
+    padding: 10px;
+    color: #ffffff;
+    font-size: 50px;
+}
+
+.body {
+    width: 100%;
+    height: 440px;
+    box-sizing: border-box;
+    margin-top: 10px;
+
+}
+
+.line {
     display: flex;
     width: 100%;
-    height: 90px;
-    text-align: end;
+    height: 80px;
+    margin-bottom: 10px;
+
 }
-.body{
+
+.botton {
     display: flex;
-    width: 400px;
-    height: 400px;
-}
-.midbody{
-    width: 100%;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
     height: 100%;
+    color: #ffffff;
+    font-size: 40px;
+    background-color: #404040;
+    margin-right: 10px;
 }
-.row{
-    display: flex;
-    width: 100%;
-    height: 20%;
+
+.line.end,
+.botton.end {
+    margin: 0;
 }
-.button:hover{
-    background-color: yellowgreen;
+
+.historico {
+    max-width: 360px;
+    background-color: #000000;
 }
-.button{
+
+.textRes {
     font-size: 20px;
-    width: 25%;
-    height: 100%;
+    color: #ffffff;
 }
-.res{
-    font-size: 30px;
-}
-.history{
-    background-color: green;
-}
-.text{
-    font-size: 20px;
-    margin: 0px;
-}
-.historico{
-    width: 500px;
-    background-color: aquamarine;
-}
-.bodyPage{
-    display: flex;
+
+.hist {
+    padding: 10px;
 }
