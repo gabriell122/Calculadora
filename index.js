@@ -100,22 +100,22 @@ const Sinal = (botao) => {
     }
 
     //Se tivermos 2 sinais seguidos verifica se é uma %  ou ( )
-    if(sinalCorrente == ")" && sinal.includes(botao) || botao == "(" && sinal.includes(sinalCorrente) || sinalCorrente == "%"){
+    if (sinalCorrente == ")" && (sinal.includes(botao) || sinalCorrente == ")") || botao == "(" && (sinal.includes(sinalCorrente) || sinalCorrente == "(") || sinalCorrente == "%") {
 
         //Adiciona o sinal corrente no array
         contaArray.push(sinalCorrente);
-    
+
         //Sinal Corrente resebe o Botão pressionado
         sinalCorrente = botao;
 
         //Exibe o Array mais o Sinal pressionado
         visor.innerHTML = contaArray.join(' ') + " " + sinalCorrente;
 
-    }else{
+    } else {
 
         //Sinal Corrente resebe o Botão pressionado
         sinalCorrente = botao;
-    
+
         //Exibe o Array mais o Sinal pressionado
         visor.innerHTML = contaArray.join(' ') + " " + sinalCorrente;
     }
@@ -148,7 +148,7 @@ const Igual = () => {
 
     //Verifica se a resposta é um Número
     if (typeof Resposta === 'number') {
-        
+
         //Gera o Array do Histórico 
         historico.push({
             "ope": contaArray,
@@ -179,58 +179,57 @@ const Parenteses = () => {
     //Copia o Array em outro para modificar ele
     let semParenteses = [...contaArray];
 
-    //Faz o map desse Array
-    semParenteses.map(
-        (item, indice, array) => {
+    for (let indice = 0; indice < semParenteses.length; indice++) {
 
-            //Busca o primeiro fechamento de parenteses no Array
-            if (item == ")") {
+        //Busca o primeiro fechamento de parenteses no Array
+        if (semParenteses[indice] == ")") {
 
-                //Guarda o indice dele 
-                const fechamentoIndice = indice;
+            //Guarda o indice dele 
+            const fechamentoIndice = indice;
 
-                //Define uma variável para guardar a abertura
-                let aberturaIndice;
+            //Define uma variável para guardar a abertura
+            let aberturaIndice;
 
-                //Busca o ultima abertura de parenteses antes do primeiro fechamento de parenteses do Array
-                contaArray.map(
-                    (item, indice) => {
+            for (let indice = 0; indice < fechamentoIndice; indice++) {
 
-                        //Acha as aberturas de paresteses
-                        if (item == "(") {
+                //Acha as aberturas de paresteses
+                if (semParenteses[indice] == "(") {
 
-                            //Verifica se ela esta antes do primeiro fechamento do parrenses
-                            if (indice < fechamentoIndice) {
+                    //Verifica se ela esta antes do primeiro fechamento do parrenses
+                    if (indice < fechamentoIndice) {
 
-                                //Garda o indice dele
-                                aberturaIndice = indice;
-                            }
-                        }
+                        //Garda o indice dele
+                        aberturaIndice = indice;
                     }
-                )
-
-                //Verifica se a quantidade de aberturas e fechamentos de parenteses batem
-                if ((aberturaIndice === 0 || aberturaIndice) && fechamentoIndice || (aberturaIndice === 0 || aberturaIndice) && fechamentoIndice) {
-                    
-                    //Garda os itens dentro dos parenteses em outro array
-                    let parentesesArray = array.slice(aberturaIndice + 1, fechamentoIndice);
-                    
-                    //Calcula o resultado dentro dos parenteses
-                    const resposta = Calcular(parentesesArray);
-
-                    //Ranca os parenteses e termos dentro dele
-                    array.splice(aberturaIndice, fechamentoIndice - aberturaIndice + 1);
-
-                    //Adiciona o resultado da conta no array principal
-                    array.splice(aberturaIndice, 0, resposta[0]);
-
-                    //Retorna mensagem de erro
-                } else {
-                    console.log('Erro de parênteses');
                 }
+
+            }
+
+            //Verifica se a quantidade de aberturas e fechamentos de parenteses batem
+            if ((aberturaIndice === 0 || aberturaIndice) && fechamentoIndice || (aberturaIndice === 0 || aberturaIndice) && fechamentoIndice) {
+                //Garda os itens dentro dos parenteses em outro array
+                let parentesesArray = semParenteses.slice(aberturaIndice + 1, fechamentoIndice);
+
+                console.log(parentesesArray);
+                const resposta = Calcular(parentesesArray);
+
+                //Ranca os parenteses e termos dentro dele
+                semParenteses.splice(aberturaIndice, fechamentoIndice - aberturaIndice + 1);
+                //Adiciona o resultado da conta no array principal
+                semParenteses.splice(aberturaIndice, 0, resposta[0]);
+                indice=0;
+                console.log(semParenteses);
+
+                //Retorna mensagem de erro
+            } else {
+                console.log('Erro de parênteses');
             }
         }
-    )
+
+    }
+
+
+
 
     //Depois que todos os parenteses são calculado então envia o array principal para ser calculado
     const Resultado = Calcular(semParenteses);
@@ -273,20 +272,20 @@ function Calcular(array) {
 
             //Envia o indece a resposta e o array para o pos calculo
             posCalculo(indice, resposta, array);
-            
+
             //Diminui em um o indice para verificar o proximo sinal
             indice--;
         }
 
         //Verifica se tem *
         if (array[indice] == "*") {
-            
+
             //Faz a multiplicação do Número anterior pelo Número posterior
             let resposta = array[indice - 1] * array[indice + 1];
-            
+
             //Envia o indece a resposta e o array para o pos calculo
             posCalculo(indice, resposta, array);
-            
+
             //Diminui em um o indice para verificar o proximo sinal
             indice--;
         }
@@ -294,29 +293,29 @@ function Calcular(array) {
 
     //Corre o array procurando por - + para fazelas 
     for (let indice = 0; indice < array.length; indice++) {
-        
+
         //Verifica se tem -
         if (array[indice] == "-") {
-    
+
             //Faz a subtração do Número anterior pelo Número posterior
             let resposta = array[indice - 1] - array[indice + 1];
 
             //Envia o indece a resposta e o array para o pos calculo
             posCalculo(indice, resposta, array);
-    
+
             //Diminui em um o indice para verificar o proximo sinal
             indice--
         }
-    
+
         //Verifica se tem +
         if (array[indice] == "+") {
-            
+
             //Faz a soma do Número anterior pelo Número posterior
             let resposta = array[indice - 1] + array[indice + 1];
-            
+
             //Envia o indece a resposta e o array para o pos calculo
             posCalculo(indice, resposta, array);
-            
+
             //Diminui em um o indice para verificar o proximo sinal
             indice--;
         }
@@ -348,7 +347,7 @@ const historicoView = () => {
 
     //Faz o novo Historico em um map
     historico.map((intem, indice, array) => {
-        
+
         //Coloca cada conta
         htmlHitorico.insertAdjacentHTML('beforeend', `
             <div class = "hist">
