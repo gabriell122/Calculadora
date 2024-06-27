@@ -1,193 +1,358 @@
-        //Var global
-        let currentNumber = '';
-        let arrayCount = [];
-        let historic = [];
-        const htmlHitorico = document.querySelector(".historico");
-        const PresButton = (presButton) => {
+//sinalCorrente VAI GERAR UM BUG NO ()
 
-            //defino os numero e sinais de operações
-            const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
-            const sinal = ["-", "+", "*", "/", "^", "$", "m", "n", "f" , "%"];
 
-            //se for numero
-            if (num.includes(presButton)) {
+//Define o visor
+const visor = document.getElementById('visor');
 
-                // junto a string deles
-                currentNumber = currentNumber + presButton;
-                //exibe o calculo na tela
-                document.getElementById('deubom').value = arrayCount.join(' ') + ' ' + currentNumber;
+//Define o historico
+const htmlHitorico = document.getElementById("historico");
 
-                //se for sinal
-            } else if (sinal.includes(presButton)) {
+//Define uma variável para armanezar o Número Corrente
+let numeroCorrente = "";
 
-                //verifico sinais  que não da para pasar valor direto        
-                switch (presButton) {
-                    case 'm':
-                        presButton = '(';
-                        break;
-                    case 'n':
-                        presButton = ')';
-                        break;
-                    // Apaga a memória resetando o arrayCount e o currentNumber
-                    case 'f':
-                        arrayCount = '';
-                        currentNumber = '';
-                        break;
-                    default:
-                        break;
+//Cria um Array para amazenar o historico
+var historico = [];
 
-                }
+//Cria um Array para gardar os Números e Sinais da Conta já separados
+let contaArray = [];
 
-                //acrecenta ao array o número  se ele existir
-                if (currentNumber) {
-                    arrayCount.push(parseFloat(currentNumber));
-                }
+//Cria uma variável para gardar o Sinal Corrente permitindo a troca de Sinais
+let sinalCorrente = "";
 
-                //adiciona o sinal 
-                arrayCount.push(presButton);
+//Defino os Números e Sinais de operações
+const nummero = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+const sinal = ["-", "+", "*", "/", "^", "$", "m", "n", "f", "%"];
 
-                //reseta o currentNumber
-                currentNumber = '';
+const BotaoPrecionado = (botao) => {
 
-                //exibe o calculo na tela
-                document.getElementById('deubom').value = arrayCount.join(' ');
+    //Se for um Número
+    if (nummero.includes(botao)) {
 
-                //se for o sinal de =
-            } else if (presButton === "=") {
+        //Executa 
+        Numero(botao);
 
-                //verifica se não tem um numero perdido
-                if (currentNumber) {
-                    arrayCount.push(parseFloat(currentNumber));
+        //Se for um Sinal
+    } else if (sinal.includes(botao)) {
 
-                    //reseta o currentNumber
-                    currentNumber = '';
-                }
-                //chama a função de calculo e passa como parametro arrayCount
-                const Res = Ordem([...arrayCount]);
+        //Executa
+        Sinal(botao);
 
-                //mostra a resposta
-                document.getElementById('deubom').value = Res;
-                
-                //historico 
-                historic.push({
-                    "ope": arrayCount,
-                    "res": Res
-                });
+        //Se for =
+    } else if (botao === "=") {
 
-                //reseta o valor do arrayCount e atribui o valor da resposta a ele
-                arrayCount = [];
-                currentNumber = Res;
+        Igual();
+        //Entrada não tratada
+    } else {
+        console.log('Erro');
+        console.log('Entrada não tratada');
+    }
 
-                //Erro
-            } else {
-                console.log('Erro:Entrada não tratada');
-            }
-        }
+}
 
-        //Função que verifica os parênteses 
-        const Ordem = (arrayMap) => {
+//Se for um Número
+const Numero = (botao) => {
+    //Adiciona o Número prescionado ao Número Corrente
+    numeroCorrente = numeroCorrente + botao;
 
-            //Roda o arrayMap buscando por parênteses (pela ultima abertura)
-            for (let index = arrayMap.length + 1; index >= 0; index--) {
+    //Exibe o calculo na tela
+    visor.innerHTML = contaArray.join(' ') + ' ' + sinalCorrente + ' ' + numeroCorrente;
 
-                //se achar
-                if (arrayMap[index] == '(') {
-                    let aIndex = index;
+    //Se tiver um sinal gardado Adiciona ele no Array da conta e zera a variável do sinal
+    if (sinalCorrente) {
+        contaArray.push(sinalCorrente);
+        sinalCorrente = ""
+    }
+}
 
-                    //busca pelo primeiro fechamento
-                    for (let index = aIndex; index < arrayMap.length; index++) {
+//Se for um Sinal
+const Sinal = (botao) => {
 
-                        //se achar o fechamento
-                        if (arrayMap[index] == ')') {
+    //Acrecenta ao array o Número  se ele existir e zera a variável do Número
+    if (numeroCorrente) {
+        contaArray.push(parseFloat(numeroCorrente));
+        numeroCorrente = '';
+    }
 
-                            //corta o arrayMap gerando um novo arraySlice que é o recorte interno do conteudo do parênteses
-                            let arraySlice = arrayMap.slice(aIndex + 1, index);
+    //verifico sinais  que não da para pasar valor direto        
+    switch (botao) {
 
-                            //calcula o valor do arraySlice
-                            const Res = Calcular(arraySlice);
-                            //ranca a parte do parênteses que foi calculado 
-                            arrayMap.splice(aIndex, index - aIndex + 1);
-                            //adiciona o valor Resultado
-                            arrayMap.splice(aIndex, 0, Res[0]);
-                        } else {
-                            console.log('Erro: fechamento de parênteses');
-                        }
+        //Troca M por ( 
+        case 'm':
+            botao = '(';
+            break;
+
+        //Troca N por ) 
+        case 'n':
+            botao = ')';
+            break;
+
+        // Apaga a memória resetando o contaArray, sinalCorrente e o numeroCorrente
+        case 'f':
+            contaArray = [];
+            numeroCorrente = '';
+            sinalCorrente = "";
+            botao = "";
+            break;
+
+        //Sai do Switch
+        default:
+            break;
+    }
+
+    //Se tivermos 2 sinais seguidos verifica se é uma %  ou ( )
+    if (sinalCorrente == ")" && (sinal.includes(botao) || sinalCorrente == ")") || botao == "(" && (sinal.includes(sinalCorrente) || sinalCorrente == "(") || sinalCorrente == "%") {
+
+        //Adiciona o sinal corrente no array
+        contaArray.push(sinalCorrente);
+
+        //Sinal Corrente resebe o Botão pressionado
+        sinalCorrente = botao;
+
+        //Exibe o Array mais o Sinal pressionado
+        visor.innerHTML = contaArray.join(' ') + " " + sinalCorrente;
+
+    } else {
+
+        //Sinal Corrente resebe o Botão pressionado
+        sinalCorrente = botao;
+
+        //Exibe o Array mais o Sinal pressionado
+        visor.innerHTML = contaArray.join(' ') + " " + sinalCorrente;
+    }
+}
+
+const Igual = () => {
+
+    //Verifica se não tem um Número perdido
+    if (numeroCorrente) {
+
+        //Adiciona ele no Array
+        contaArray.push(parseFloat(numeroCorrente));
+
+        //reseta o numeroCorrente
+        numeroCorrente = '';
+    }
+
+    //Verifica se não tem um Sinal perdido
+    if (sinalCorrente) {
+
+        //Adiciona ele no Array
+        contaArray.push(sinalCorrente);
+
+        //Reseta o sinalCorrente
+        sinalCorrente = "";
+    }
+
+    //Chama a função de calculo entre parenteses que retorna a resposta
+    const Resposta = Parenteses();
+
+    //Verifica se a resposta é um Número
+    if (typeof Resposta === 'number') {
+
+        //Gera o Array do Histórico 
+        historico.push({
+            "ope": contaArray,
+            "res": Resposta
+        });
+
+        //Reseta o valor do contaArray
+        contaArray = [];
+
+        //Garda a resposta no Número Corrente
+        numeroCorrente = Resposta;
+
+        //Mostra a resposta
+        document.getElementById('visor').innerHTML = numeroCorrente;
+
+        //historico
+        historicoView();
+
+    } else {
+        document.getElementById('visor').innerHTML = "Error";
+    }
+
+}
+
+//Faz o calculo entre Parenteses
+const Parenteses = () => {
+
+    //Copia o Array em outro para modificar ele
+    let semParenteses = [...contaArray];
+
+    for (let indice = 0; indice < semParenteses.length; indice++) {
+
+        //Busca o primeiro fechamento de parenteses no Array
+        if (semParenteses[indice] == ")") {
+
+            //Guarda o indice dele 
+            const fechamentoIndice = indice;
+
+            //Define uma variável para guardar a abertura
+            let aberturaIndice;
+
+            for (let indice = 0; indice < fechamentoIndice; indice++) {
+
+                //Acha as aberturas de paresteses
+                if (semParenteses[indice] == "(") {
+
+                    //Verifica se ela esta antes do primeiro fechamento do parrenses
+                    if (indice < fechamentoIndice) {
+
+                        //Garda o indice dele
+                        aberturaIndice = indice;
                     }
                 }
+
             }
 
-            // depois que todos os parenteses são calculado então envia o array principal para ser calculado
-            const Resultado = Calcular(arrayMap);
-            //pega a resposta retorna ela
-            return (Resultado[0]);
-            //atuliza o valor de cal para o resposta
-            cal = array[0]
-        }
+            //Verifica se a quantidade de aberturas e fechamentos de parenteses batem
+            if ((aberturaIndice === 0 || aberturaIndice) && fechamentoIndice || (aberturaIndice === 0 || aberturaIndice) && fechamentoIndice) {
+                //Garda os itens dentro dos parenteses em outro array
+                let parentesesArray = semParenteses.slice(aberturaIndice + 1, fechamentoIndice);
 
-        //Função que realmente calcula
-        function Calcular(e) {
-            //verifica se não tem %
-            for (let i = 0; i < e.length; i++) {
-                if (e[i] == "%") {
-                    e[i-1] = e[i-1]/100;
-                    e.splice(i, 1);
-                }
-            }            
-            //primerio corre o array procurando por / * para fazelas
-            for (let i = 0; i < e.length; i++) {
-                //se achar sinal de divisao faz a conta e envia pro posCalculo limpar o array e adicionar a resposta no array
-                if (e[i] == "/") {
-                    let res = e[i - 1] / e[i + 1];
-                    posCalculo(i, res, e);
-                    i--;
-                }
-                //o mesmo para multiplicação
-                if (e[i] == "*") {
-                    let res = e[i - 1] * e[i + 1];
-                    posCalculo(i, res, e);
-                    i--;
-                }
+                console.log(parentesesArray);
+                const resposta = Calcular(parentesesArray);
+
+                //Ranca os parenteses e termos dentro dele
+                semParenteses.splice(aberturaIndice, fechamentoIndice - aberturaIndice + 1);
+                //Adiciona o resultado da conta no array principal
+                semParenteses.splice(aberturaIndice, 0, resposta[0]);
+                indice=0;
+                console.log(semParenteses);
+
+                //Retorna mensagem de erro
+            } else {
+                console.log('Erro de parênteses');
             }
-            //acabando a multiplicação e divisão começa a soma e subtração 
-            for (let i = 0; i < e.length; i++) {
-                // faz a subtração
-                if (e[i] == "-") {
-                    let res = e[i - 1] - e[i + 1];
-                    posCalculo(i, res, e);
-                    i--
-                }
-                //faz a soma
-                if (e[i] == "+") {
-                    let res = e[i - 1] + e[i + 1];
-                    posCalculo(i, res, e);
-                    i--;
-                }
-            }
-            //retorna o valor
-            return (e);
-            //obs: é possível adicionar mais operações como raiz quadrada , potencia , entre outros des de que siga a orderm de procedencia correta
         }
 
-        const posCalculo = (index, res, e) => {
-            e.splice(index - 1, 3);
-            e.splice(index - 1, 0, res);
-            return (e);
+    }
+
+
+
+
+    //Depois que todos os parenteses são calculado então envia o array principal para ser calculado
+    const Resultado = Calcular(semParenteses);
+
+    //pega a resposta retorna ela
+    return (Resultado[0]);
+}
+
+//Função que realmente calcula
+function Calcular(array) {
+    //Faz as contas seguindo as ordem das operações
+    //obs: é possível adicionar mais operações como raiz quadrada , potencia , entre outros des de que siga a orderm de procedencia correta
+
+    //Corre o array procurando por % para fazelas
+    for (let indice = 0; indice < array.length; indice++) {
+
+        //Verifica se tem %
+        if (array[indice] == "%") {
+
+            //Pega o valor do Número Anterior do % e divide por 100 e o substitui
+            array[indice - 1] = array[indice - 1] / 100;
+
+            //Ranca a % do array
+            array.splice(indice, 1);
+
+            //Diminui em um o indice para verificar o proximo sinal
+            indice--
+        }
+    }
+
+    //Corre o array procurando por / * para fazelas
+    for (let indice = 0; indice < array.length; indice++) {
+
+
+        //Verifica se tem /
+        if (array[indice] == "/") {
+
+            //Faz a divisão do Número anterior pelo Número posterior
+            let resposta = array[indice - 1] / array[indice + 1];
+
+            //Envia o indece a resposta e o array para o pos calculo
+            posCalculo(indice, resposta, array);
+
+            //Diminui em um o indice para verificar o proximo sinal
+            indice--;
         }
 
-        //historico 
-         //Historico
-         const history = () => {
-            htmlHitorico.innerHTML = '';
-            //objetoArray => historico[index] é o objeto do index
-            //indexArray => historico[index] é o index do map que ta sendo feito
-            // fullArray => historico é p arra completo
-            historic.map((objetoArray, indexArray, fullArray) => {
-                var htmlString = `
-                    <div class = "hist">
-                        <p class = "text"> Operação: ${objetoArray.ope.join("")}</p>
-                        <p class = "text"> Resultado: ${objetoArray.res}</p>
-                    </div>
-                `;
-                htmlHitorico.insertAdjacentHTML('beforeend', htmlString);
-            })
+        //Verifica se tem *
+        if (array[indice] == "*") {
+
+            //Faz a multiplicação do Número anterior pelo Número posterior
+            let resposta = array[indice - 1] * array[indice + 1];
+
+            //Envia o indece a resposta e o array para o pos calculo
+            posCalculo(indice, resposta, array);
+
+            //Diminui em um o indice para verificar o proximo sinal
+            indice--;
         }
+    }
+
+    //Corre o array procurando por - + para fazelas 
+    for (let indice = 0; indice < array.length; indice++) {
+
+        //Verifica se tem -
+        if (array[indice] == "-") {
+
+            //Faz a subtração do Número anterior pelo Número posterior
+            let resposta = array[indice - 1] - array[indice + 1];
+
+            //Envia o indece a resposta e o array para o pos calculo
+            posCalculo(indice, resposta, array);
+
+            //Diminui em um o indice para verificar o proximo sinal
+            indice--
+        }
+
+        //Verifica se tem +
+        if (array[indice] == "+") {
+
+            //Faz a soma do Número anterior pelo Número posterior
+            let resposta = array[indice - 1] + array[indice + 1];
+
+            //Envia o indece a resposta e o array para o pos calculo
+            posCalculo(indice, resposta, array);
+
+            //Diminui em um o indice para verificar o proximo sinal
+            indice--;
+        }
+    }
+
+    //Retorna o valor
+    return (array);
+}
+
+//Função posCalculo
+const posCalculo = (indice, resposta, array) => {
+
+    //Remove o termos da operação feita
+    array.splice(indice - 1, 3);
+
+    //Adiciona a resposta no lugar
+    array.splice(indice - 1, 0, resposta);
+
+    //Retorna o Array
+    return (array);
+}
+
+
+//Faz o Historico
+const historicoView = () => {
+
+    //Limpa o Historico
+    htmlHitorico.innerHTML = '';
+
+    //Faz o novo Historico em um map
+    historico.map((intem, indice, array) => {
+
+        //Coloca cada conta
+        htmlHitorico.insertAdjacentHTML('beforeend', `
+            <div class = "hist">
+                <div class = "textRes"> ${intem.ope.join("")} = ${intem.res}</div>
+            </div>`
+        );
+    })
+}
