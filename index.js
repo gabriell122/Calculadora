@@ -51,8 +51,26 @@ const BotaoPrecionado = (botao) => {
 
 //Se for um Número
 const Numero = (botao) => {
-    //Adiciona o Número prescionado ao Número Corrente
-    numeroCorrente = numeroCorrente + botao;
+
+    if (botao == '.') {
+        if (numeroCorrente != "") {
+            if (numeroCorrente.includes('.') && botao == ".") {
+                alert("Error ja tem um ponto ai")
+            } else {
+                //Adiciona o Número prescionado ao Número Corrente
+                numeroCorrente = numeroCorrente + botao;
+            }
+        } else {
+            alert("Erro Digite um numero antes do ponto")
+        }
+    } else {
+        if (numeroCorrente.includes('.') && botao == ".") {
+            alert("Error ja tem um ponto ai")
+        } else {
+            //Adiciona o Número prescionado ao Número Corrente
+            numeroCorrente = numeroCorrente + botao;
+        }
+    }
 
     //Exibe o calculo na tela
     visor.innerHTML = contaArray.join(' ') + ' ' + sinalCorrente + ' ' + numeroCorrente;
@@ -217,7 +235,7 @@ const Parenteses = () => {
                 semParenteses.splice(aberturaIndice, fechamentoIndice - aberturaIndice + 1);
                 //Adiciona o resultado da conta no array principal
                 semParenteses.splice(aberturaIndice, 0, resposta[0]);
-                indice=0;
+                indice = 0;
                 console.log(semParenteses);
 
                 //Retorna mensagem de erro
